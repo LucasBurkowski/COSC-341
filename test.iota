@@ -1,0 +1,12 @@
+BEGIN
+	x, y >> int ;
+	z	 >> int ;
+	
+	x := 1 - 2 * 3 ;
+  	x := x / 4 + x * 5;
+	y :=  (x+1) * (2 + 3 / 4 - x);
+
+	display(x);
+	display(z);
+
+END

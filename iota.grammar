@@ -1,0 +1,114 @@
+/****************************************************************
+ * Copyright (c) 2007, Compsci, Eastern Michigan University  	*
+ * All rights reserved.											*
+ *																*
+ * Please see the LICENSE file for license information.			*
+ ****************************************************************/
+
+/****************************************************************
+ * This is a grammar for a tiny tiny artificial language.       *
+ * It was implemented as an illustration of how to write a      *
+ * compiler in SableCC and Java. 								*	
+ ****************************************************************/
+ 
+Package iota; // package name
+
+Helpers
+  	// letters and digits
+  	letter = [['a' .. 'z'] + ['A' .. 'Z']];
+  	digit = ['0' .. '9'] ;
+
+  	// un-printable characters
+  	tab = 9 ;
+  	cr = 13 ;
+  	lf = 10 ;
+  	blank = ' ' ;
+
+Tokens
+  	// reserved words
+  	start = 'BEGIN' ;
+  	finish = 'END' ;
+  	display = 'display' ;
+  	int = 'int' ;
+
+  	// arithmetic symbols
+  	plus = '+' ;
+  	minus = '-' ;
+  	mult = '*' ;
+  	div = '/' ;
+  	assignop = ':=' ;		//***** new feature *****
+    
+  	// symbols separators
+  	comma = ',' ;
+  	colon = ':' ;
+  	coloncolon = '>>' ;		//***** new feature *****
+  	semicolon = ';' ;
+  	l_paren = '(' ;
+  	r_paren = ')' ;
+
+  	// identifiers
+  	identifier = letter (letter | digit)* ;
+
+  	// numbers
+  	number = digit+ ; // integer numbers only
+
+  	// blanks 
+  	blanks = blank | cr lf | cr | lf | tab ;
+
+Ignored Tokens
+  	blanks ;
+
+Productions
+	// program definition
+	program = 
+		start
+			declarations
+			body
+		finish ;
+
+  	// declarations
+  	declarations = 
+    	variables_definition* ;
+
+  	variables_definition =
+    	identifier_list coloncolon type semicolon ;
+
+  	identifier_list =
+    	{single} 		identifier |
+    	{multiple} 		identifier_list comma identifier ;
+
+	// type -- only data type allowed is the integer data type
+  	type =
+    	int ;  
+
+ 	// body definition
+  	body = 
+      	statement_sequence ;
+      
+	// statements
+  	statement_sequence =
+    	{single} 		statement |
+    	{multiple} 		statement_sequence semicolon statement ;
+
+  	statement =
+    	{display} 		display l_paren identifier r_paren |
+    	{assignment} 	identifier assignop expression |
+    	{empty} ;
+
+  	// expressions
+  	expression =
+    	{term}		 	term |
+    	{plus} 			expression plus term |
+    	{minus} 		expression minus term ;
+
+  	term =
+    	{factor} 		factor |
+    	{mult} 			term mult factor |
+    	{div} 			term div factor ;
+
+  	factor =
+    	{identifier} 	identifier |
+    	{number} 		number |
+    	{expression} 	l_paren expression r_paren;
+
+// end of grammar.
