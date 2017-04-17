@@ -1,0 +1,9 @@
+% Author:
+% Date: 4/16/2017
+
+dispnth([X|_], H, I) :-
+ !.
+dispnth([_|Y], H, I) :-
+ H > 0,
+ H1 is H-1,
+ dispnth(Y, H1, I).
